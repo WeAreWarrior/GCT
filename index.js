@@ -1,9 +1,23 @@
-const axios = require('axios');
+const express = require('express');
+const http = require('http');
+const socketIo = require('socket.io');
 
-axios.get('https://api.spotify.com/v1/search?q=Yellow + Colplay&type=track', {
-    headers: {
-    'Authorization': 'Bearer BQAp6BWWRyW86ZgR3MGj0tXCsyKXc7Z-LVArc5z1wjz5Tmk4idIQkY43iltGNcTKp3B72FOX1k2GAbVoXwlm1ME8AMtbyLiTjj7HnrMbY8uAk9unmJYLYXCs6ofDH5SA3OrFGD9rJXN7T8yLj04T7dNLl8Sy8AYfR-RaYHfiXa4G5ifmU-NYdxRcKjSZRssTIw' 
-}
-}).then((data)=>{
-    console.log(data.data.tracks.items[0].id);
-})
+const app = express();
+const server = http.createServer(app);
+const io = socketIo(server);
+
+io.on('connection', (socket) => {
+    // Handle socket connection
+    socket.on('message', (message) => {
+        // Broadcast received messsage to all connected clients
+        io.emit('message', message);
+    });
+});
+
+server.listen(3000, () => {
+    console.log('Server is running on http://localhost:3000');
+});
+
+app.get('/', (req, res) => {
+    res.sendFile(__dirname + '/index.html');
+});

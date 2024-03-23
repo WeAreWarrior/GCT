@@ -1,15 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewpoint" content="width=device-width, initial-scale=1.0">
+        <title>Socket.IO Chat</title>
+    </head>
+    <body>
+     <input type="text" id="messageInput" placeholder="Type your message">
+     <button onclick="sendMessage()">Send</button>
+     <ul id="chatMessage"></ul>
+     
+     <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+     <script>
+        const socket = io('http://localhost:3000');
 
-    <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/3xBa02zGAMCcrAAFUqxqeI?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-    <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/4sZDyON3hp3bB9Y8uayqvT?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-    <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/2ONW0ksoUixoxT7gfI9hWX?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-    <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/3AJwUDP919kvQ9QcozQPxg?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+        socket.on('message', (message) => {
+            const chatMessages = document.getElementById('chatMessage');
+            const li = document.createElement('li');
+            li.appendChild(document.createTextNode(message));
+            chatMessages.appendChild(li);
+        });
+
+        function sendMessage() {
+            const messageInput = document.getElementById('messageInput');
+            const message = messageInput.value;
+            socket.emit('message', message);
+            messageInput.value = '';
+        }
+    </script>
 </body>
 </html>
